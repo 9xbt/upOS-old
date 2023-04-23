@@ -4,9 +4,10 @@ bits 16
 jmp _start ; start the os
 
 ; variables
-startup_logo db '  ______              ______    ______  ', 0x0d, 0x0a, ' /      \            /      \  /      \ ', 0x0d, 0x0a, '|  $$$$$$\ __    __ |  $$$$$$\|  $$$$$$\', 0x0d, 0x0a, '| $$__/ $$|  \  /  \| $$  | $$| $$___\$$', 0x0d, 0x0a, ' \$$    $$ \$$\/  $$| $$  | $$ \$$    \ ', 0x0d, 0x0a, ' _\$$$$$$$  >$$  $$ | $$  | $$ _\$$$$$$\', 0x0d, 0x0a, '|  \__/ $$ /  $$$$\ | $$__/ $$|  \__| $$', 0x0d, 0x0a, ' \$$    $$|  $$ \$$\ \$$    $$ \$$    $$',  0x0d, 0x0a, '  \$$$$$$  \$$   \$$  \$$$$$$   \$$$$$$ ', 0
-msg_boot_successful db 'Boot successful', 0
-msg_version db 0x0d, 0x0a, 'Beta 1.0', 0x0d, 0x0a, 'Copyright (c) 2023 Mobren', 0x0d, 0x0a, 0
+startup_logo db " __  _______    ______    ______  ", 0x0d, 0x0a, "|  \|       \  /      \  /      \ ", 0x0d, 0x0a, ' \$$| $$$$$$$\|  $$$$$$\|  $$$$$$\', 0x0d, 0x0a, '|  \| $$  | $$| $$  | $$| $$___\$$', 0x0d, 0x0a, '| $$| $$  | $$| $$  | $$ \$$    \ ', 0x0d, 0x0a, '| $$| $$  | $$| $$  | $$ _\$$$$$$\', 0x0d, 0x0a, '| $$| $$__/ $$| $$__/ $$|  \__| $$', 0x0d, 0x0a, '| $$| $$    $$ \$$    $$ \$$    $$', 0x0d, 0x0a, ' \$$ \$$$$$$$   \$$$$$$   \$$$$$$ ', 0
+msg_boot_successful db 'Boot successful!', 0
+msg_version db 0x0d, 0x0a, 'Beta 1.1', 0x0d, 0x0a, 'Copyright (c) 2023 ImperiumX. All rights reserved', 0x0d, 0x0a, 0
+msg_ram db '', 0
 
 buffer times 255 db 0
 prompt db 'usr > ', 0
@@ -18,42 +19,42 @@ cmd_clear db 'clear', 0
 cmd_echo db 'echo', 0
 
 msg_unknown db 'Unknown command.', 0x0d, 0x0a, 0
-msg_about_1 db '9xOS', 0x0d, 0x0a, 0
-msg_about_2 db 'Beta 1.0', 0x0d, 0x0a, 'Copyright (c) 2023 Mobren', 0
+msg_about_1 db 'iDOS', 0x0d, 0x0a, 0
+msg_about_2 db 'Beta 1.1', 0x0d, 0x0a, 'Copyright (c) 2023 Mobren', 0
 msg_help_1 db 'Functions:', 0x0d, 0x0a, 0
-msg_help_2 db ' help - Shows all functions', 0x0d, 0x0a, ' about - Shows about section for of 9xOS', 0x0d, 0x0a, ' clear - Clears the screen', 0x0d, 0x0a, ' echo - Echoes what you say', 0x0d, 0x0a, 0
+msg_help_2 db ' help - Shows all functions', 0x0d, 0x0a, ' about - Shows about section for of iDOS', 0x0d, 0x0a, ' clear - Clears the screen', 0x0d, 0x0a, ' echo - Echoes what you say', 0x0d, 0x0a, 0
 
-  %macro write 1
-  ; write %1
-  mov si, %1
-  call print_string
-  %endmacro
+%macro write 1
+; write %1
+mov si, %1
+call print_string
+%endmacro
 
-  %macro cwrite 3
-  ; set color
-  mov bl, %2
-  mov cx, %3
-  mov ah, 09h
-  int 10h
+%macro cwrite 3
+; set color
+mov bl, %2
+mov cx, %3
+mov ah, 09h
+int 10h
 
-  write %1
-  %endmacro
+write %1
+%endmacro
 
-  %macro log 1
-  write %1 ; write %1
-  write nl ; write nl
-  %endmacro
+%macro log 1
+write %1 ; write %1
+write nl ; write nl
+%endmacro
 
-  %macro clog 3
-  ; set color
-  mov bl, %2
-  mov cx, %3
-  mov ah, 09h
-  int 10h
+%macro clog 3
+; set color
+mov bl, %2
+mov cx, %3
+mov ah, 09h
+int 10h
 
-  write %1
-  write nl
-  %endmacro
+write %1
+write nl
+%endmacro
 
 _start:
   ; stuff
@@ -67,8 +68,14 @@ _start:
 
   ; show startup screen
   log msg_boot_successful
-  clog startup_logo, 0x02, 720
+  clog startup_logo, 0x02, 680
   log msg_version
+
+  int 0x15
+  mov eax = 0xE820
+
+  mov si, ax
+  call print_string
 
   jmp _loop ; go to main loop
 
