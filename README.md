@@ -1,2 +1,2 @@
 # 9xOS
-A simple kernel made in assembly
+A simple kernel made in assembly.
