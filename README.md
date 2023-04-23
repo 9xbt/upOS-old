@@ -1,7 +1,7 @@
 # iDOS
 A simple kernel made in assembly.
 
-![image](https://user-images.githubusercontent.com/109512837/233855042-f33573e9-8ec8-4cdc-aaff-1a7db6cde6a1.png)
+![image](https://user-images.githubusercontent.com/109512837/233864806-b14c6f2a-7d7a-4c0e-9337-b6667efbf62b.png)
 
 ## Building it
 Prerequisites:
