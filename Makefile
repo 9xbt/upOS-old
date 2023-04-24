@@ -1,5 +1,10 @@
 all: clean bin iso run
 
+configure:
+	sudo apt install nasm
+	sudo apt install qemu
+	sudo apt install mkisofs
+
 bin:
 	touch kernel.bin
 	nasm -f bin -o kernel.bin kernel.asm
