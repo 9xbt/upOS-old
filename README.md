@@ -7,11 +7,11 @@ A simple kernel made in assembly.
 
 ## Building it
 Prerequisites:
-- GNU Make
-- NASM
-- QEMU System i386
+- make
+- nasm
+- qemu-system-i386
 - mkisofs
 
-To install them simply run `bash setup.sh`
+To install them simply run `sudo apt install` followed by the name of the prerequisite. 
 
 To build iDOS you simply need to do `make all`, this will build the kernel and run it.
