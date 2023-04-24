@@ -13,3 +13,7 @@ clean:
 	rm -rvf kernel.bin
 	rm -rvf cdiso
 	rm -rvf kernel.iso
+
+configure:
+	sudo apt install nasm
+	sudo apt install mkisofs
