@@ -9,6 +9,7 @@ Prerequisites:
 - NASM
 - QEMU
 - mkisofs
+To install them simply run `bash setup.sh`
 
 To build iDOS you simply need to do `make all`, this will build the kernel and run it.
 
