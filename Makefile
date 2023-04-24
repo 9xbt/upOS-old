@@ -1,8 +1,7 @@
-all: clean bin iso run
+all: clean bin iso
 
 configure:
 	sudo apt install nasm
-	sudo apt install qemu
 	sudo apt install mkisofs
 
 bin:
@@ -16,6 +15,7 @@ iso:
 	mkisofs -b kernel.img -no-emul-boot -o kernel.iso cdiso/
 
 run: 
+	make all
 	qemu-system-i386 -cdrom kernel.iso
 
 clean:
