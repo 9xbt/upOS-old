@@ -9,7 +9,7 @@ A simple kernel made in assembly.
 Prerequisites:
 - GNU Make
 - NASM
-- QEMU
+- QEMU System i386
 - mkisofs
 
 To install them simply run `bash setup.sh`
