@@ -1,8 +1,4 @@
-all:
-	make clean
-	make bin
-	make iso
-	make debug
+all: clean bin iso run
 
 bin:
 	touch kernel.bin
@@ -14,7 +10,7 @@ iso:
 	mv -v kernel.img cdiso
 	mkisofs -b kernel.img -no-emul-boot -o kernel.iso cdiso/
 
-debug:
+run: 
 	qemu-system-i386 -cdrom kernel.iso
 
 clean:
