@@ -20,11 +20,11 @@ cmd_clear db 'clear', 0
 cmd_echo db 'echo', 0
 
 msg_unknown db 'Unknown command.', 0x0d, 0x0a, 0
-msg_about_1 db 0x0d, 0x0a, 'iDOS', 0x0d, 0x0a, 0
-msg_about_2 db 'Beta 1.0', 0x0d, 0x0a, 'Copyright (c) 2023 Imperium', 0x0d, 0x0a, 0
-msg_help_1 db 0x0d, 0x0a, 'Functions:', 0x0d, 0x0a, 0
+msg_about_1 db '-- iDOS --', 0x0d, 0x0a, 0
+msg_about_2 db ' Beta 1.0', 0x0d, 0x0a, ' Copyright (c) 2023 Imperium', 0x0d, 0x0a, 0
+msg_help_1 db '-- Functions --', 0x0d, 0x0a, 0
 msg_help_2 db ' help - Shows all functions.', 0x0d, 0x0a, ' about - Shows information about the project.', 0x0d, 0x0a, ' clear - Clears the screen.', 0x0d, 0x0a, ' echo - Echoes what you say.', 0x0d, 0x0a, ' credits - Shows the credits.', 0x0d, 0x0a, 0x0d, 0x0a, 0
-msg_credits_1 db 0x0d, 0x0a, '-- Credits --', 0x0d, 0x0a, 0
+msg_credits_1 db '-- Credits --', 0x0d, 0x0a, 0
 msg_credits_2 db ' xrc2 - Created the project.', 0x0d, 0x0a, ' ekeleze - Contributor.', 0x0d, 0x0a, 0
 
 %macro write 1
@@ -121,13 +121,21 @@ _loop:
     jmp _loop
 
   .help:
-    cwrite msg_help_1, 0x02, 10
+    write nl
+    cwrite msg_help_1, 0x02, 15
     write msg_help_2
     jmp _loop
 
   .about:
-    cwrite msg_about_1, 0x02, 4
+    write nl
+    cwrite msg_about_1, 0x02, 10
     log msg_about_2
+    jmp _loop
+
+  .credits
+    write nl
+    cwrite msg_credits_1, 0x02, 13
+    log msg_credits_2
     jmp _loop
 
   .clear:
@@ -139,11 +147,6 @@ _loop:
     mov di, buffer
     call get_string
     log buffer
-    jmp _loop
-
-  .credits
-    write msg_credits_1
-    log msg_credits_2
     jmp _loop
 
 print_string:
