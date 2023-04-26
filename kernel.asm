@@ -5,7 +5,7 @@ jmp _start ; start the os
 
 ; variables
 startup_logo db " __  _______    ______    ______  ", 0x0d, 0x0a, "|  \|       \  /      \  /      \ ", 0x0d, 0x0a, ' \$$| $$$$$$$\|  $$$$$$\|  $$$$$$\', 0x0d, 0x0a, '|  \| $$  | $$| $$  | $$| $$___\$$', 0x0d, 0x0a, '| $$| $$  | $$| $$  | $$ \$$    \ ', 0x0d, 0x0a, '| $$| $$  | $$| $$  | $$ _\$$$$$$\', 0x0d, 0x0a, '| $$| $$__/ $$| $$__/ $$|  \__| $$', 0x0d, 0x0a, '| $$| $$    $$ \$$    $$ \$$    $$', 0x0d, 0x0a, ' \$$ \$$$$$$$   \$$$$$$   \$$$$$$ ', 0
-msg_boot_successful db 'Boot successful!', 0
+msg_boot_successful db 'Welcome to imperiumDOS!', 0
 msg_version db 0x0d, 0x0a, 'Beta 1.0', 0x0d, 0x0a, 'Copyright (c) 2023 Imperium. All rights reserved', 0x0d, 0x0a, 0
 msg_ram db '', 0
 
@@ -13,16 +13,19 @@ buffer times 255 db 0
 prompt db 'usr > ', 0
 nl db 0x0d, 0x0a, 0
 
+cmd_credits db 'credits', 0
 cmd_help db 'help', 0
 cmd_about db 'about', 0
 cmd_clear db 'clear', 0
 cmd_echo db 'echo', 0
 
 msg_unknown db 'Unknown command.', 0x0d, 0x0a, 0
-msg_about_1 db 'iDOS', 0x0d, 0x0a, 0
-msg_about_2 db 'Beta 1.0', 0x0d, 0x0a, 'Copyright (c) 2023 Imperium', 0
-msg_help_1 db 'Functions:', 0x0d, 0x0a, 0
-msg_help_2 db ' help - Shows all functions', 0x0d, 0x0a, ' about - Shows about section for of iDOS', 0x0d, 0x0a, ' clear - Clears the screen', 0x0d, 0x0a, ' echo - Echoes what you say', 0x0d, 0x0a, 0
+msg_about_1 db 0x0d, 0x0a, 'iDOS', 0x0d, 0x0a, 0
+msg_about_2 db 'Beta 1.0', 0x0d, 0x0a, 'Copyright (c) 2023 Imperium', 0x0d, 0x0a, 0
+msg_help_1 db 0x0d, 0x0a, 'Functions:', 0x0d, 0x0a, 0
+msg_help_2 db ' help - Shows all functions.', 0x0d, 0x0a, ' about - Shows information about the project.', 0x0d, 0x0a, ' clear - Clears the screen.', 0x0d, 0x0a, ' echo - Echoes what you say.', 0x0d, 0x0a, ' credits - Shows the credits.', 0x0d, 0x0a, 0x0d, 0x0a, 0
+msg_credits_1 db 0x0d, 0x0a, '-- Credits --', 0x0d, 0x0a, 0
+msg_credits_2 db ' xrc2 - Created the project.', 0x0d, 0x0a, ' ekeleze - Contributor.', 0x0d, 0x0a, 0
 
 %macro write 1
 ; write %1
@@ -57,7 +60,7 @@ write nl
 %endmacro
 
 _start:
-  ; stuff
+  ; stuff10
   mov ax, 0
   mov ds, ax
   mov es, ax
@@ -104,6 +107,11 @@ _loop:
   call strcmp
   jc .echo
 
+  mov si, buffer
+  mov di, cmd_credits
+  call strcmp
+  jc .credits
+
   jc .unknown
  
   ; Commands section
@@ -131,6 +139,11 @@ _loop:
     mov di, buffer
     call get_string
     log buffer
+    jmp _loop
+
+  .credits
+    write msg_credits_1
+    log msg_credits_2
     jmp _loop
 
 print_string:
