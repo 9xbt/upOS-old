@@ -1,36 +1,34 @@
-org 0x7c00
+org 0x7C00
 bits 16
 
-jmp _start ; start the os
+jmp main
 
 ; variables
-startup_logo db " __  _______    ______    ______  ", 0x0d, 0x0a, "|  \|       \  /      \  /      \ ", 0x0d, 0x0a, ' \$$| $$$$$$$\|  $$$$$$\|  $$$$$$\', 0x0d, 0x0a, '|  \| $$  | $$| $$  | $$| $$___\$$', 0x0d, 0x0a, '| $$| $$  | $$| $$  | $$ \$$    \ ', 0x0d, 0x0a, '| $$| $$  | $$| $$  | $$ _\$$$$$$\', 0x0d, 0x0a, '| $$| $$__/ $$| $$__/ $$|  \__| $$', 0x0d, 0x0a, '| $$| $$    $$ \$$    $$ \$$    $$', 0x0d, 0x0a, ' \$$ \$$$$$$$   \$$$$$$   \$$$$$$ ', 0
-msg_boot_successful db 'Welcome to imperiumDOS!', 0
-msg_version db 0x0d, 0x0a, 'Beta 1.0', 0x0d, 0x0a, 'Copyright (c) 2023 Imperium. All rights reserved', 0x0d, 0x0a, 0
-msg_ram db '', 0
+startup_logo db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
+msg_boot_successful db `Welcome to imperiumDOS!\r\n\0`
+msg_version db `Beta 1.1\r\nCopyright (c) 2023 Imperium. All rights reserved\r\n\n\0`
 
-buffer times 255 db 0
-prompt db 'usr > ', 0
-nl db 0x0d, 0x0a, 0
+buffer times 0x4D db `\0`
+prompt db `$ \0`
+nl db `\r\n\0`
 
-cmd_credits db 'credits', 0
-cmd_help db 'help', 0
-cmd_about db 'about', 0
-cmd_clear db 'clear', 0
-cmd_echo db 'echo', 0
+cmd_credits db `credits`, 0x00
+cmd_help db `help`, 0x00
+cmd_about db `about`, 0x00
+cmd_clear db `clear`, 0x00
+cmd_echo db `echo`, 0x20 ; this one uses strstart so it ends in 0x20
 
-msg_unknown db 'Unknown command.', 0x0d, 0x0a, 0
-msg_about_1 db '-- iDOS --', 0x0d, 0x0a, 0
-msg_about_2 db ' Beta 1.0', 0x0d, 0x0a, ' Copyright (c) 2023 Imperium', 0x0d, 0x0a, 0
-msg_help_1 db '-- Functions --', 0x0d, 0x0a, 0
-msg_help_2 db ' help - Shows all functions.', 0x0d, 0x0a, ' about - Shows information about the project.', 0x0d, 0x0a, ' clear - Clears the screen.', 0x0d, 0x0a, ' echo - Echoes what you say.', 0x0d, 0x0a, ' credits - Shows the credits.', 0x0d, 0x0a, 0x0d, 0x0a, 0
-msg_credits_1 db '-- Credits --', 0x0d, 0x0a, 0
-msg_credits_2 db ' xrc2 - Created the project.', 0x0d, 0x0a, ' ekeleze - Contributor.', 0x0d, 0x0a, 0
+msg_unknown db `Unknown command.\r\n\0`
+msg_about_1 db `-- iDOS --\r\n\0`
+msg_about_2 db ` Beta 1.0\r\nCopyright (c) 2023 Imperium\r\n\n\0`
+msg_help_1 db `-- Functions --\r\n\0`
+msg_help_2 db ` help - Shows all functions.\r\n about - Shows information about the project.\r\n clear - Clears the screen.\r\n echo - Echoes what you say.\r\n credits - Shows the credits.\r\n\n\0`
+msg_credits_1 db `-- Credits --\r\n\0`
+msg_credits_2 db ` xrc2 - Created the project.\r\n ekeleze - Contributor.\r\n\n\0`
 
 %macro write 1
-; write %1
 mov si, %1
-call print_string
+call printf
 %endmacro
 
 %macro cwrite 3
@@ -44,8 +42,8 @@ write %1
 %endmacro
 
 %macro log 1
-write %1 ; write %1
-write nl ; write nl
+write %1
+write `\r\n`
 %endmacro
 
 %macro clog 3
@@ -55,17 +53,19 @@ mov cx, %3
 mov ah, 09h
 int 10h
 
-write %1
-write nl
+log %1
 %endmacro
 
-_start:
-  ; stuff10
+main:
+  ; clear the registers
   mov ax, 0
   mov ds, ax
   mov es, ax
   mov ss, ax
-  mov sp, 0x7c00
+  ; set the stack at 0x7C00
+  mov sp, 0x7C00
+
+  ; clear the screen
   mov ax, 3
   int 10h
 
@@ -78,10 +78,10 @@ _start:
 
 _loop:
   mov si, prompt
-  call print_string
+  call printf
 
   mov di, buffer
-  call get_string
+  call getline
 
   mov si, buffer
   cmp byte [si], 0
@@ -104,7 +104,7 @@ _loop:
 
   mov si, buffer
   mov di, cmd_echo
-  call strcmp
+  call strstart
   jc .echo
 
   mov si, buffer
@@ -117,24 +117,24 @@ _loop:
   ; Commands section
 
   .unknown:
-    cwrite msg_unknown, 0x0C, 16
+    cwrite msg_unknown, $0C, 16
     jmp _loop
 
   .help:
     write nl
-    cwrite msg_help_1, 0x02, 15
+    cwrite msg_help_1, $02, 15
     write msg_help_2
     jmp _loop
 
   .about:
     write nl
-    cwrite msg_about_1, 0x02, 10
+    cwrite msg_about_1, $02, 10
     log msg_about_2
     jmp _loop
 
-  .credits
+  .credits:
     write nl
-    cwrite msg_credits_1, 0x02, 13
+    cwrite msg_credits_1, $02, 13
     log msg_credits_2
     jmp _loop
 
@@ -143,41 +143,40 @@ _loop:
     int 10h
     jmp _loop
 
-  .echo
-    mov di, buffer
-    call get_string
-    log buffer
+  .echo:
+    log buffer + 5
+    write nl
     jmp _loop
 
-print_string:
+printf:
   lodsb
   or al, al
-  jz .done
+  jz .ret
  
-  mov ah, 0x0e
-  int 0x10
+  mov ah, $0e
+  int $10
 
-  jmp print_string
+  jmp printf
 
-  .done:
+  .ret:
     ret
 
-get_string:
+getline:
   xor cl, cl
     .loop:
       mov ah, 0
-      int 0x16
+      int $16
 
-      cmp al, 0x08
+      cmp al, $08
       je .backspace
    
       cmp al, 0x0D
       je .done
    
-      cmp cl, 0xFF ; amount of characters to take
+      cmp cl, 0x4D ; amount of characters to take
       je .loop
    
-      mov ah, 0x0e
+      mov ah, $0e
       int 0x10
 
       stosb
@@ -192,15 +191,15 @@ get_string:
       mov byte [di], 0
       dec cl
     
-      mov ah, 0x0e
-      mov al, 0x08
-      int 0x10
+      mov ah, $0e
+      mov al, $08
+      int $10
 
       mov al, ' '
-      int 0x10
+      int $10
 
-      mov al, 0x08
-      int 0x10
+      mov al, $08
+      int $10
 
       jmp .loop
 
@@ -208,15 +207,17 @@ get_string:
       mov al,0
       stosb
       
-      mov ah, 0x0e
-      mov al, 0x0d
-      int 0x10
-      mov al, 0x0a
-      int 0x10
+      mov ah, $0e
+      mov al, 0x0D
+      int $10
+      mov al, 0x0A
+      int $10
 
       ret
 
 strcmp:
+  ; si: buffer
+  ; di: command
  .loop:
   mov al, [si]
   mov bl, [di]
@@ -232,8 +233,34 @@ strcmp:
   jmp .loop
 
   .notequal:
-   clc
-   ret
+    clc
+    ret
+
+  .done:
+    stc
+    ret
+
+strstart:
+  ; si: buffer
+  ; di: command
+ .loop:
+  mov al, [si]
+  mov bl, [di]
+  cmp al, bl
+  jne .notequal
+
+  cmp al, 0x20 ; space char
+  je .done
+
+  inc di
+  inc si
+
+  jmp .loop
+
+  .notequal:
+    clc
+    ret
+
   .done:
     stc
     ret
