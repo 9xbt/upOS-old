@@ -1,5 +1,5 @@
+[BITS 16]
 org 0x7C00
-bits 16
 
 jmp main
 
@@ -16,7 +16,7 @@ cmd_credits db `credits`, 0x00
 cmd_help db `help`, 0x00
 cmd_about db `about`, 0x00
 cmd_clear db `clear`, 0x00
-cmd_echo db `echo`, 0x20 ; this one uses strstart so it ends in 0x20
+cmd_echo db `echo`, 0x20
 
 msg_unknown db `Unknown command.\r\n\0`
 msg_about_1 db `-- iDOS --\r\n\0`
@@ -26,17 +26,21 @@ msg_help_2 db ` help - Shows all functions.\r\n about - Shows information about 
 msg_credits_1 db `-- Credits --\r\n\0`
 msg_credits_2 db ` xrc2 - Created the project.\r\n ekeleze - Contributor.\r\n\n\0`
 
+aString db '  Hello  ', 0
+
 %macro write 1
 mov si, %1
-call printf
+mov bl, 0x07
+call print_string
 %endmacro
 
-%macro cwrite 3
-; set color
+%macro cwrite 2
+mov si, %1
+call len_string
+
 mov bl, %2
-mov cx, %3
-mov ah, 09h
-int 10h
+mov cx, si
+call set_color
 
 write %1
 %endmacro
@@ -46,14 +50,9 @@ write %1
 write `\r\n`
 %endmacro
 
-%macro clog 3
-; set color
-mov bl, %2
-mov cx, %3
-mov ah, 09h
-int 10h
-
-log %1
+%macro clog 2
+cwrite %1, %2
+write nl
 %endmacro
 
 main:
@@ -71,17 +70,20 @@ main:
 
   ; show startup screen
   log msg_boot_successful
-  clog startup_logo, 0x02, 680
+  mov bl, 0x02
+  mov cx, 674
+  call set_color
+  log startup_logo
   log msg_version
 
   jmp _loop ; go to main loop
 
 _loop:
   mov si, prompt
-  call printf
+  call print_string
 
   mov di, buffer
-  call getline
+  call get_string
 
   mov si, buffer
   cmp byte [si], 0
@@ -89,27 +91,32 @@ _loop:
 
   mov si, buffer
   mov di, cmd_help
-  call strcmp
+  mov cl, 0x00
+  call cmp_string
   jc .help
  
   mov si, buffer
   mov di, cmd_about
-  call strcmp
+  mov cl, 0x00
+  call cmp_string
   jc .about
 
   mov si, buffer
   mov di, cmd_clear
-  call strcmp
+  mov cl, 0x00
+  call cmp_string
   jc .clear
 
   mov si, buffer
   mov di, cmd_echo
-  call strstart
+  mov cl, 0x20
+  call cmp_string
   jc .echo
 
   mov si, buffer
   mov di, cmd_credits
-  call strcmp
+  mov cl, 0x00
+  call cmp_string
   jc .credits
 
   jc .unknown
@@ -117,24 +124,24 @@ _loop:
   ; Commands section
 
   .unknown:
-    cwrite msg_unknown, $0C, 16
+    cwrite msg_unknown, $0C
     jmp _loop
 
   .help:
     write nl
-    cwrite msg_help_1, $02, 15
+    cwrite msg_help_1, $02
     write msg_help_2
     jmp _loop
 
   .about:
     write nl
-    cwrite msg_about_1, $02, 10
+    cwrite msg_about_1, $02
     log msg_about_2
     jmp _loop
 
   .credits:
     write nl
-    cwrite msg_credits_1, $02, 13
+    cwrite msg_credits_1, $02
     log msg_credits_2
     jmp _loop
 
@@ -148,20 +155,39 @@ _loop:
     write nl
     jmp _loop
 
-printf:
+set_color:
+  ; usage:
+  ; mov bl, your_color
+  ; mov cx, your_string_length
+  mov ah, 09h
+  int 10h
+  ret
+
+clear_screen:
+  mov ax, 3
+  int 10h
+  ret
+
+print_string:
+  ; si = string pointer
+  ; bl = color
+
   lodsb
   or al, al
   jz .ret
+
+  ;mov cx, 1
+  ;call set_color
  
   mov ah, $0e
   int $10
 
-  jmp printf
+  jmp print_string
 
   .ret:
     ret
 
-getline:
+get_string:
   xor cl, cl
     .loop:
       mov ah, 0
@@ -215,16 +241,45 @@ getline:
 
       ret
 
-strcmp:
-  ; si: buffer
-  ; di: command
+trim_string_start:
+  .loop:
+    mov al, [si]
+
+    cmp al, 0x20
+    jne .notequal
+
+    inc si
+    jmp .loop
+
+  .notequal:
+    ret
+
+trim_string_end:
+  .loop:
+    mov al, [si]
+
+    cmp al, 0x20
+    jne .notequal
+
+    dec si
+    jmp .loop
+
+  .notequal:
+    ret
+
+cmp_string:
+  ; usage:
+  ; mov si, your_string_1
+  ; mov si, your_string_2
+  ; the carry flag is set to high if they match
+
  .loop:
   mov al, [si]
   mov bl, [di]
   cmp al, bl
   jne .notequal
 
-  cmp al, 0
+  cmp al, cl ; the string ending
   je .done
 
   inc di
@@ -240,27 +295,25 @@ strcmp:
     stc
     ret
 
-strstart:
-  ; si: buffer
-  ; di: command
- .loop:
-  mov al, [si]
-  mov bl, [di]
-  cmp al, bl
-  jne .notequal
+len_string:
+  ; usage:
+  ; mov si, your_string
+  ; si is the string length now
 
-  cmp al, 0x20 ; space char
-  je .done
+  mov di, 0
 
-  inc di
-  inc si
+  .loop:
+    mov al, [si] ; get the contents of si into al
 
-  jmp .loop
+    cmp al, 0x00 ; null character
+    je .done ; jump if true
 
-  .notequal:
-    clc
-    ret
+    inc si ; increment the pointers
+    inc di
+    inc al
 
-  .done:
-    stc
-    ret
+    jmp .loop
+
+    .done:
+      mov si, di ; move the length to si
+      ret ; then retire
