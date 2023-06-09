@@ -6,27 +6,30 @@ jmp main
 ; variables
 startup_logo db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
 msg_boot_successful db `Welcome to imperiumDOS!\r\n\0`
-msg_version db `Beta 1.1\r\nCopyright (c) 2023 Imperium. All rights reserved\r\n\n\0`
+msg_version db `Beta 1.2-pre\r\nCopyright (c) 2023 Imperium. All rights reserved\r\n\n\0`
 
-buffer times 0x4D db `\0`
+buffer times 0x4D db 0
 prompt db `$ \0`
 nl db `\r\n\0`
 
-cmd_credits db `credits`, 0x00
-cmd_help db `help`, 0x00
-cmd_about db `about`, 0x00
-cmd_clear db `clear`, 0x00
-cmd_echo db `echo`, 0x20
+cmd_credits db `credits\0`
+cmd_help db `help\0`
+cmd_about db `about\0`
+cmd_clear db `clear\0`
+cmd_echo db `echo`
+cmd_edit db `edit`
 
-msg_unknown db `Unknown command.\r\n\0`
+err_unknown db `Unknown command.\r\n\0`
+err_argument db `Not enough arguments.\r\n\0`
+
 msg_about_1 db `-- iDOS --\r\n\0`
-msg_about_2 db ` Beta 1.0\r\nCopyright (c) 2023 Imperium\r\n\n\0`
+msg_about_2 db ` Beta 1.2-pre\r\n Copyright (c) 2023 Imperium\r\n\n\0`
 msg_help_1 db `-- Functions --\r\n\0`
-msg_help_2 db ` help - Shows all functions.\r\n about - Shows information about the project.\r\n clear - Clears the screen.\r\n echo - Echoes what you say.\r\n credits - Shows the credits.\r\n\n\0`
+msg_help_2 db ` help - Shows all functions.\r\n about - Shows information about the project.\r\n clear - Clears the screen.\r\n echo - Echoes what you say.\r\n credits - Shows the credits.\r\n edit - Text editor.\r\n\n\0`
 msg_credits_1 db `-- Credits --\r\n\0`
 msg_credits_2 db ` xrc2 - Created the project.\r\n ekeleze - Contributor.\r\n\n\0`
 
-aString db '  Hello  ', 0
+cmd_edit_buffer times 0x7D0 db 0
 
 %macro write 1
 mov si, %1
@@ -109,7 +112,7 @@ _loop:
 
   mov si, buffer
   mov di, cmd_echo
-  mov cl, 0x20
+  mov cl, 'o'
   call cmp_string
   jc .echo
 
@@ -119,12 +122,22 @@ _loop:
   call cmp_string
   jc .credits
 
-  jc .unknown
+  mov si, buffer
+  mov di, cmd_edit
+  mov cl, 't'
+  call cmp_string
+  jc .edit
+
+  jc .err_unknown
  
   ; Commands section
 
-  .unknown:
-    cwrite msg_unknown, $0C
+  .err_unknown:
+    cwrite err_unknown, $0C
+    jmp _loop
+
+  .err_argument:
+    cwrite err_argument, $0C
     jmp _loop
 
   .help:
@@ -153,6 +166,15 @@ _loop:
   .echo:
     log buffer + 5
     write nl
+    jmp _loop
+
+  .edit:
+    call clear_screen
+
+    mov di, cmd_edit_buffer
+    call cmd_edit_get_string
+
+    ;log cmd_edit_buffer
     jmp _loop
 
 set_color:
@@ -199,7 +221,7 @@ get_string:
       cmp al, 0x0D
       je .done
    
-      cmp cl, 0x4D ; amount of characters to take
+      cmp cl, 0x4D ; 77
       je .loop
    
       mov ah, $0e
@@ -217,13 +239,16 @@ get_string:
       mov byte [di], 0
       dec cl
     
+      ; move the cursor back 1 position
       mov ah, $0e
       mov al, $08
       int $10
 
+      ; remove the character at the current position
       mov al, ' '
       int $10
 
+      ; move the cursor back 1 position
       mov al, $08
       int $10
 
@@ -240,32 +265,6 @@ get_string:
       int $10
 
       ret
-
-trim_string_start:
-  .loop:
-    mov al, [si]
-
-    cmp al, 0x20
-    jne .notequal
-
-    inc si
-    jmp .loop
-
-  .notequal:
-    ret
-
-trim_string_end:
-  .loop:
-    mov al, [si]
-
-    cmp al, 0x20
-    jne .notequal
-
-    dec si
-    jmp .loop
-
-  .notequal:
-    ret
 
 cmp_string:
   ; usage:
@@ -317,3 +316,101 @@ len_string:
     .done:
       mov si, di ; move the length to si
       ret ; then retire
+
+cmd_edit_get_string:
+  xor cl, cl
+    .loop:
+      mov ah, 0
+      int $16
+
+      cmp al, 0x08
+      je .backspace
+
+      cmp al, 0x0D
+      je .newline
+   
+      cmp al, 0x1B
+      je .done
+   
+      mov ah, $0e
+      int 0x10
+
+      stosb
+      inc cl
+      jmp .loop
+
+    .backspace:
+      push cx
+      mov bh, 0
+      mov ah, 03h
+      int 10h
+      pop cx
+
+      cmp cl, 0
+      je .loop
+
+      dec di
+      mov byte [di], 0
+      dec cl
+
+      cmp dl, 0
+      je .decline
+    
+      ; move the cursor back 1 position
+      mov ah, 0eh
+      mov al, 08h
+      int 10h
+
+      ; remove the character at the current position
+      mov al, ' '
+      int $10
+
+      ; move the cursor back 1 position
+      mov al, 08h
+      int 10h
+
+      jmp .loop
+
+    .decline:
+      mov bh, 0
+      mov dl, bl
+      dec dh
+      mov ah, 02h
+      int 10h
+
+      mov ah, 0eh
+      mov al, ' '
+      int 10h
+
+      mov ah, 02h
+      int 10h
+
+      jmp .loop
+
+    .done:
+      write nl
+      write cmd_edit_buffer
+
+      mov al, 0
+      stosb
+      write nl
+      ret
+
+    .newline:
+      ; dl = col
+      ; dh = row
+      push cx
+      mov bh, 0
+      mov ah, 03h
+      int 10h
+      pop cx
+
+      mov bl, dl ; bl is not used, so store it there instead
+
+      inc di
+      mov byte [di], 0x0D ; \r
+      inc di
+      mov byte [di], 0x0A ; \n
+      inc cl
+      write nl
+      jmp .loop
