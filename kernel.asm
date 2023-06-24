@@ -33,7 +33,7 @@ call print_string
 section .data:
   startup_logo: db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
   msg_boot_successful: db `Welcome to imperiumDOS!\r\n\0`
-  msg_version: db `Beta 1.2-pre\r\nCopyright (c) 2023 Imperium. All rights reserved\r\n\n\0`
+  msg_version: db `Beta 1.2-pre [build 240623]\r\nCopyright (c) 2023 Imperium. All rights reserved\r\n\n\0`
 
   prompt: db `$ \0`
   nl: db `\r\n\0`
@@ -56,7 +56,6 @@ section .data:
   msg_credits_2: db ` xrc2 - Created the project.\r\n ekeleze - Contributor.\r\n\n\0`
 
   input_buffer: times 0x4D db 0
-  user_buffer: times 0x4D db 0
 
 section .text:
   _start:
@@ -82,8 +81,7 @@ section .text:
     jmp _loop ; go to main loop
 
   _loop:
-    mov si, prompt
-    call print_string
+    write prompt
 
     mov di, input_buffer
     call get_string
@@ -92,37 +90,43 @@ section .text:
     cmp byte [si], 0
     je _loop
 
+    mov si, input_buffer
     mov di, cmd_help
     mov cl, 0x00
     call cmp_string
     jc .help
  
+    mov si, input_buffer
     mov di, cmd_about
     mov cl, 0x00
     call cmp_string
     jc .about
 
+    mov si, input_buffer
     mov di, cmd_clear
     mov cl, 0x00
     call cmp_string
     jc .clear
 
-    mov di, cmd_echo
-    mov cl, 'o'
-    call cmp_string
-    jc .echo
-
+    mov si, input_buffer
     mov di, cmd_credits
     mov cl, 0x00
     call cmp_string
     jc .credits
 
+    mov si, input_buffer
+    mov di, cmd_echo
+    mov cl, 'o'
+    call cmp_string
+    jc .echo
+
+    mov si, input_buffer
     mov di, cmd_user
     mov cl, 'r'
     call cmp_string
     jc .user
 
-    jc .unknown
+    jmp .unknown
  
     ; Commands section
 
