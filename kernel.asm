@@ -33,7 +33,7 @@ call print_string
 section .data:
   startup_logo: db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
   msg_boot_successful: db `Welcome to imperiumDOS!\r\n\0`
-  msg_version: db `Beta 1.2-pre [build 240623]\r\nCopyright (c) 2023 Imperium. All rights reserved\r\n\n\0`
+  msg_version: db `Beta 1.2-pre [build 020723a]\r\nCopyright (c) 2023 Imperium. All rights reserved\r\n\n\0`
 
   prompt: db `$ \0`
   nl: db `\r\n\0`
@@ -209,6 +209,8 @@ section .text:
 
     .ret:
       ret
+
+    ;https://www.reddit.com/r/asm/comments/jd2osj/how_could_i_implement_a_delay_in_asm/
 
   get_string:
     xor cl, cl
