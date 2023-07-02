@@ -82,6 +82,7 @@ section .text:
     jmp _loop ; go to main loop
 
   _loop:
+    write user_buffer
     write prompt
 
     mov di, input_buffer
@@ -164,8 +165,15 @@ section .text:
       jmp _loop
 
     .user:
-      log input_buffer + 5
-      write nl
+      ;log input_buffer + 5
+      ;write nl
+      mov si, user_buffer
+      mov ah, 0x4D
+      call str_clear
+
+      ;mov si, input_buffer
+      ;mov di, user_buffer
+      ;call str_copy
       jmp _loop
 
   set_color:
@@ -331,15 +339,39 @@ section .text:
     .loop:
       mov al, [si] ; get the contents of si into al
 
-      cmp al, 0x00 ; null character
-      je .done ; jump if true
+      cmp al, 0 ; null character
+      je .ret ; jump if true
+
+      mov [di], al
 
       inc si ; increment the pointers
       inc di
+
+      jmp .loop
+
+      .ret:
+        ret
+
+  str_clear:
+    ; si = string
+    ; ah = length
+
+    ; usage:
+    ; mov si, your_string
+    ; si is the string length now
+
+    mov al, 0
+
+    .loop:
+      cmp al, ah ; string length
+      je .ret ; jump if true
+
+      mov si, 65
+
+      inc si ; increment the pointers
       inc al
 
       jmp .loop
 
-      .done:
-        mov si, di ; move the length to si
-        ret ; then retire
+      .ret:
+        ret
