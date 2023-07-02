@@ -53,9 +53,10 @@ section .data:
   msg_help_1: db `-- Functions --\r\n\0`
   msg_help_2: db ` help - Shows all functions.\r\n about - Shows information about the project.\r\n clear - Clears the screen.\r\n echo - Echoes what you say.\r\n credits - Shows the credits.\r\n user - Sets your username for this session.\r\n\n\0`
   msg_credits_1: db `-- Credits --\r\n\0`
-  msg_credits_2: db ` xrc2 - Created the project.\r\n ekeleze - Contributor.\r\n\n\0`
+  msg_credits_2: db ` xrc2 - Created the project, developer.\r\n ekeleze - Developer.\r\n\n\0`
 
   input_buffer: times 0x4D db 0
+  user_buffer: times 0x4D db 0
 
 section .text:
   _start:
@@ -312,6 +313,30 @@ section .text:
 
       inc si ; increment the pointers
       inc di
+
+      jmp .loop
+
+      .done:
+        mov si, di ; move the length to si
+        ret ; then retire
+
+  str_copy:
+    ; si = string
+    ; di = destination
+
+    ; usage:
+    ; mov si, your_string
+    ; si is the string length now
+
+    .loop:
+      mov al, [si] ; get the contents of si into al
+
+      cmp al, 0x00 ; null character
+      je .done ; jump if true
+
+      inc si ; increment the pointers
+      inc di
+      inc al
 
       jmp .loop
 
