@@ -54,6 +54,7 @@ section .data:
   msg_help_2: db ` help - Shows all functions.\r\n about - Shows information about the project.\r\n clear - Clears the screen.\r\n echo - Echoes what you say.\r\n credits - Shows the credits.\r\n user - Sets your username for this session.\r\n\n\0`
   msg_credits_1: db `-- Credits --\r\n\0`
   msg_credits_2: db ` xrc2 - Created the project, developer.\r\n ekeleze - Developer.\r\n\n\0`
+  msg_notimplemented: db `This command is not implemented, sorry!\r\n\0`
 
   input_buffer: times 0x4D db 0
   user_buffer: times 0x4D db 0
@@ -165,11 +166,12 @@ section .text:
       jmp _loop
 
     .user:
+      cwrite msg_notimplemented, $0C
       ;log input_buffer + 5
       ;write nl
-      mov si, user_buffer
-      mov ah, 0x4D
-      call str_clear
+      ;mov si, user_buffer
+      ;mov ah, 0x4D
+      ;call str_clear
 
       ;mov si, input_buffer
       ;mov di, user_buffer
@@ -327,51 +329,3 @@ section .text:
       .done:
         mov si, di ; move the length to si
         ret ; then retire
-
-  str_copy:
-    ; si = string
-    ; di = destination
-
-    ; usage:
-    ; mov si, your_string
-    ; si is the string length now
-
-    .loop:
-      mov al, [si] ; get the contents of si into al
-
-      cmp al, 0 ; null character
-      je .ret ; jump if true
-
-      mov [di], al
-
-      inc si ; increment the pointers
-      inc di
-
-      jmp .loop
-
-      .ret:
-        ret
-
-  str_clear:
-    ; si = string
-    ; ah = length
-
-    ; usage:
-    ; mov si, your_string
-    ; si is the string length now
-
-    mov al, 0
-
-    .loop:
-      cmp al, ah ; string length
-      je .ret ; jump if true
-
-      mov si, 65
-
-      inc si ; increment the pointers
-      inc al
-
-      jmp .loop
-
-      .ret:
-        ret
