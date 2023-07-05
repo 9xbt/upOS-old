@@ -12,6 +12,6 @@ Prerequisites:
 - qemu
 - cdrtools
 
-To install them simply run `sudo apt install prerequisite-here` on ubuntu-based distros, or `sudo pacman -S prerequisite-here` on arch-based distros.
+To install them simply run `sudo apt install prerequisite-here` on ubuntu-based distros<br>or `sudo pacman -S prerequisite-here` on arch-based distros.
 
 To build iDOS you simply need to do `make all`, this will build the kernel and run it.
