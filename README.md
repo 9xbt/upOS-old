@@ -18,7 +18,8 @@ Before you build it, you should set up a Makefile.<br>
 (Note: The makefile is no longer included because the makefile sometimes varies from computer to computer)
 
 It should look something like this if you are on linux: 
-```all: build
+```
+all: build
 	qemu-system-i386 -cdrom kernel.iso
 
 build: clean
