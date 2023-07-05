@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="859f439b-b8f1-4e99-bd77-b8634753b7be" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core.asm" beforeDir="false" afterPath="$PROJECT_DIR$/core.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel.asm" beforeDir="false" afterPath="$PROJECT_DIR$/kernel.asm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kernel.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kernel.iso" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel.bin" beforeDir="false" afterPath="$PROJECT_DIR$/kernel.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel.iso" beforeDir="false" afterPath="$PROJECT_DIR$/kernel.iso" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,20 +27,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/home/ekeleze/Documents/GitHub/iDOS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/ekeleze/Documents/GitHub/iDOS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Run" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile">
       <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="$PROJECT_DIR$" arguments="all">
@@ -53,6 +58,7 @@
       <option name="presentableId" value="Default" />
       <updated>1688544614689</updated>
       <workItem from="1688544616652" duration="565000" />
+      <workItem from="1688549643682" duration="1023000" />
     </task>
     <servers />
   </component>

@@ -5,18 +5,18 @@ jmp _start
 
 %include "core.asm"
 %include "functions/help.asm"
+%include "functions/credits.asm"
+%include "functions/about.asm"
+%include "functions/clear.asm"
 
-section .data:
+section .data
   startup_logo: db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
   msg_boot_successful: db `Welcome to imperiumDOS!\r\n\0`
-  msg_version: db `Beta 1.2-pre [build 020723a]\r\nCopyright (c) 2023 ImperiumSoft. All rights reserved.\r\n\0`
+  msg_version: db `Beta 1.2-dev\r\nCopyright (c) 2023 ImperiumSoft. All rights reserved.\r\n\0`
   msg_helptostart: db `Type help and press enter to get started.\r\n\n\0`
 
   prompt: db `$ \0`
 
-  cmd_credits: db `credits\0`
-  cmd_about: db `about\0`
-  cmd_clear: db `clear\0`
   cmd_echo: db "echo"
   cmd_user: db "user"
 
@@ -24,16 +24,12 @@ section .data:
   err_missingargument: db `Not enough arguments.\r\n\0`
   err_argumentoverflow: db `Too many arguments.\r\n\0`
 
-  msg_about_1: db `-- iDOS --\r\n\0`
-  msg_about_2: db ` Beta 1.2-pre\r\n Copyright (c) 2023 ImperiumSoft. All rights reserved.\r\n\n\0`
-  msg_credits_1: db `-- Credits --\r\n\0`
-  msg_credits_2: db ` xrc2 - Owner.\r\n ekeleze - Developer.\r\n\n\0`
   msg_notimplemented: db `This command is not implemented, sorry!\r\n\0`
 
   input_buffer: times 0x4D db 0
   user_buffer: times 0x4D db 0
 
-section .text:
+section .text
   _start:
     ; clear the registers
     mov ax, 0
@@ -117,20 +113,15 @@ section .text:
       jmp _loop
 
     .about:
-      write nl
-      cwrite msg_about_1, $02
-      log msg_about_2
+      call func_about
       jmp _loop
 
     .credits:
-      write nl
-      cwrite msg_credits_1, $02
-      log msg_credits_2
+      call func_credits
       jmp _loop
 
     .clear:
-      mov ax, 3
-      int 10h
+      call func_clear
       jmp _loop
 
     .echo:
