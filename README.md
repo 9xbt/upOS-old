@@ -22,7 +22,7 @@ It should look something like this if you are on linux:
 all: build
 	qemu-system-i386 -cdrom kernel.iso
 
-build: clean
+build:
 	nasm -f bin -o kernel.bin kernel.asm
 	mkisofs -b kernel.bin -no-emul-boot -o kernel.iso .
 clean:
