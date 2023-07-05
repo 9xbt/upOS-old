@@ -69,6 +69,12 @@ section .text
     mov cl, 0x00
     call cmp_string
     jc .help
+
+    mov si, input_buffer
+    mov di, cmd_help_alias
+    mov cl, 0x00
+    call cmp_string
+    jc .help
  
     mov si, input_buffer
     mov di, cmd_about
