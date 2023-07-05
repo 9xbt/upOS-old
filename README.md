@@ -29,4 +29,4 @@ build: clean
 clean:
 	rm -rvf kernel.bin
 	rm -rvf cdiso
-	rm -rvf kernel.iso```
+	rm -rvf kernel.iso
