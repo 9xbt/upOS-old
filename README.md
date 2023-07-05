@@ -3,7 +3,7 @@
 
 A simple kernel made in assembly.
 
-![image](https://user-images.githubusercontent.com/109512837/233864806-b14c6f2a-7d7a-4c0e-9337-b6667efbf62b.png)
+![image](https://www.ekeleze.net/assets/external/iDOS.png)
 
 ## Building it
 Prerequisites:
