@@ -26,6 +26,5 @@ build:
 	nasm -f bin -o kernel.bin kernel.asm
 	mkisofs -b kernel.bin -no-emul-boot -o kernel.iso .
 clean:
-	rm -rvf kernel.bin
-	rm -rvf cdiso
+	rm -rvf kernel.bin1
 	rm -rvf kernel.iso
