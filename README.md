@@ -19,12 +19,13 @@ Before you build it, you should set up a Makefile.<br>
 It should look something like this if you are on linux: 
 ```
 all: build
-	qemu-system-i386 -cdrom kernel.iso
+	/usr/bin/qemu/./qemu-system-i386 -cdrom kernel.iso
 
 build:
 	nasm -f bin -o kernel.bin src/kernel.asm
+	mv kernel.bin bin/kernel.bin
 	mkisofs -b kernel.bin -no-emul-boot -o kernel.iso bin/
-
+	
 clean:
 	rm -rvf kernel.bin
 	rm -rvf kernel.iso
