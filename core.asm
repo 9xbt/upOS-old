@@ -2,8 +2,8 @@
 %define CORE_ASM
 
 %macro write 1
+mov bl, 0x07
 mov si, %1
-mov bl, $07
 call print_string
 %endmacro
 
@@ -16,6 +16,9 @@ call print_string
 %macro log 1
 mov bl, 0x07
 mov si, %1
+call print_string
+mov bl, $07
+mov si, nl
 call print_string
 %endmacro
 
@@ -63,11 +66,17 @@ section .text
     jmp print_string
 
     .writechar:
-      mov ah, $0e
-      int $10
+      mov ah, 0xE
+      int 10h
       jmp print_string
 
     .ret:
+      ret
+
+    print_char:
+      ; al = char
+      mov ah, 0xE
+      int 10h
       ret
 
 %endif

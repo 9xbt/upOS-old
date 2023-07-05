@@ -10,5 +10,5 @@ section .text
     func_about:
         write nl
         cwrite msg_about_1, $02
-        log msg_about_2
+        write msg_about_2
         ret

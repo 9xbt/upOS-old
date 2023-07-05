@@ -16,6 +16,7 @@ section .data
   msg_helptostart: db `Type help and press enter to get started.\r\n\n\0`
 
   prompt: db `$ \0`
+  user_prompt: db ` $ \0`
 
   cmd_echo: db "echo"
   cmd_user: db "user"
@@ -48,14 +49,28 @@ section .text
     mov si, startup_logo
     mov bl, 0x02
     call print_string
-    log msg_version
-    log msg_helptostart
+    write msg_version
+    write msg_helptostart
 
     jmp _loop ; go to main loop
 
+  print_prompt:
+    cmp byte [user_buffer], 0
+    je .prompt
+
+    jmp .userprompt
+
+    .prompt:
+      cwrite prompt, 0x0E
+      ret
+
+    .userprompt:
+      cwrite user_prompt, 0x0E
+      ret
+
   _loop:
     write user_buffer
-    write prompt
+    call print_prompt
 
     mov di, input_buffer
     call get_string
@@ -130,16 +145,9 @@ section .text
       jmp _loop
 
     .user:
-      cwrite msg_notimplemented, $0C
-      ;log input_buffer + 5
-      ;write nl
-      ;mov si, user_buffer
-      ;mov ah, 0x4D
-      ;call str_clear
-
-      ;mov si, input_buffer
-      ;mov di, user_buffer
-      ;call str_copy
+      mov si, input_buffer + 5
+      mov di, user_buffer
+      call str_copy
       jmp _loop
 
     ;https://www.reddit.com/r/asm/comments/jd2osj/how_could_i_implement_a_delay_in_asm/
@@ -158,7 +166,7 @@ section .text
    
         cmp cl, 0x4D ; 77
         je .loop
-   
+
         mov ah, $0e
         int 0x10
 
@@ -249,4 +257,20 @@ section .text
 
       .done:
         mov si, di ; move the length to si
+        ret ; then retire
+
+  str_copy:
+    .loop:
+      mov al, [si] ; get the contents of si into al
+      mov [di], al
+
+      cmp al, 0x00 ; null character
+      je .done ; jump if true
+
+      inc si ; increment the pointers
+      inc di
+
+      jmp .loop
+
+      .done:
         ret ; then retire

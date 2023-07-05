@@ -10,5 +10,5 @@ section .text
     func_credits:
         write nl
         cwrite msg_credits_1, $02
-        log msg_credits_2
+        write msg_credits_2
         ret
