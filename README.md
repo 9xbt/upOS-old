@@ -22,10 +22,11 @@ It should look something like this if you are on linux:
 all: build
 	qemu-system-i386 -cdrom kernel.iso
 
-build: clean
-	nasm -f bin -o kernel.bin kernel.asm
-	mkisofs -b kernel.bin -no-emul-boot -o kernel.iso .
+build:
+	nasm -f bin -o kernel.bin src/kernel.asm
+	mkisofs -b kernel.bin -no-emul-boot -o kernel.iso bin/
+
 clean:
 	rm -rvf kernel.bin
-	rm -rvf cdiso
 	rm -rvf kernel.iso
+```
