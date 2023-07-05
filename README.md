@@ -9,9 +9,9 @@ A simple kernel made in assembly.
 Prerequisites:
 - make
 - nasm
-- qemu-system-i386
-- mkisofs
+- qemu
+- cdrtools
 
-To install them simply run `sudo apt install` followed by the name of the prerequisite. 
+To install them simply run `sudo apt install prerequisite-here` on ubuntu-based distros, or `sudo pacman -S prerequisite-here` on arch-based distros.
 
 To build iDOS you simply need to do `make all`, this will build the kernel and run it.
