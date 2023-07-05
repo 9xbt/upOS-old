@@ -28,10 +28,10 @@ mov si, nl
 call print_string
 %endmacro
 
-section .data:
+section .data
   nl: db `\r\n\0`
 
-section .text:
+section .text
   set_color:
     ; usage:
     ; mov bl, your_color
