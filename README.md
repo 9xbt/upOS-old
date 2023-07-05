@@ -1,5 +1,4 @@
 # iDOS
-![image](https://github.com/9xbt/iDOS/actions/workflows/makefile.yml/badge.svg)
 
 A simple kernel made in assembly.
 
