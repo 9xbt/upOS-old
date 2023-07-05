@@ -12,7 +12,7 @@ jmp _start
 section .data
   startup_logo: db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
   msg_boot_successful: db `Welcome to imperiumDOS!\r\n\0`
-  msg_version: db `Beta 1.2-dev\r\nCopyright (c) 2023 ImperiumSoft. All rights reserved.\r\n\0`
+  msg_version: db `Beta 1.2-dev \r\nCopyright (c) 2023 ImperiumSoft. All rights reserved.\r\n\0`
   msg_helptostart: db `Type help and press enter to get started.\r\n\n\0`
 
   prompt: db `$ \0`
