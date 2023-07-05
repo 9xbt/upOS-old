@@ -3,11 +3,11 @@ org 0x7C00
 
 jmp _start
 
-%include "core.asm"
-%include "functions/help.asm"
-%include "functions/credits.asm"
-%include "functions/about.asm"
-%include "functions/clear.asm"
+%include "src/core.asm"
+%include "src/functions/help.asm"
+%include "src/functions/credits.asm"
+%include "src/functions/about.asm"
+%include "src/functions/clear.asm"
 
 section .data
   startup_logo: db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`

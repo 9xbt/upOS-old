@@ -1,7 +1,7 @@
 %ifndef CLEAR_ASM
 %define CLEAR_ASM
 
-%include "core.asm"
+%include "src/core.asm"
 
 section .data
     cmd_clear: db `clear\0`

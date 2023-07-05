@@ -1,4 +1,4 @@
-%include "core.asm"
+%include "src/core.asm"
 
 section .data
     msg_about_1: db `-- iDOS --\r\n\0`

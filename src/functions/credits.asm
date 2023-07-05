@@ -1,4 +1,4 @@
-%include "core.asm"
+%include "src/core.asm"
 
 section .data
     msg_credits_1: db `-- Credits --\r\n\0`

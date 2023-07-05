@@ -1,4 +1,4 @@
-%include "core.asm"
+%include "src/core.asm"
 
 section .data
   msg_help_1: db `-- Functions --\r\n\0`
