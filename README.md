@@ -12,7 +12,7 @@ Prerequisites:
 - qemu
 - cdrtools
 
-To install them simply run `sudo apt install prerequisite-here` on ubuntu-based distros<br>or `sudo pacman -S prerequisite-here` on arch-based distros.
+To install them simply run `sudo apt install prerequisite-here` on debian-based distros<br>or `sudo pacman -S prerequisite-here` on arch-based distros.
 
 Before you build it, you should set up a Makefile.<br>
 (Note: The makefile is no longer included because the makefile sometimes varies from computer to computer)
