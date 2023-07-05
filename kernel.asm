@@ -30,11 +30,11 @@ mov si, nl
 call print_string
 %endmacro
 
-section .data:
+section .data
   startup_logo: db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
   msg_boot_successful: db `Welcome to imperiumDOS!\r\n\0`
   msg_version: db `Beta 1.2-pre [build 020723a]\r\nCopyright (c) 2023 ImperiumSoft. All rights reserved.\r\n\0`
-  msg_helptostart: db `Type help and press enter to get started.\r\n\n\0`
+  msg_help_to_start: db `Type help and press enter to get started.\r\n\n\0`
 
   prompt: db `$ \0`
   nl: db `\r\n\0`
@@ -47,8 +47,8 @@ section .data:
   cmd_user: db "user"
 
   err_unknown: db `Unknown command.\r\n\0`
-  err_missingargument: db `Not enough arguments.\r\n\0`
-  err_argumentoverflow: db `Too many arguments.\r\n\0`
+  err_missing_argument: db `Not enough arguments.\r\n\0`
+  err_argument_overflow: db `Too many arguments.\r\n\0`
 
   msg_about_1: db `-- iDOS --\r\n\0`
   msg_about_2: db ` Beta 1.2-pre\r\n Copyright (c) 2023 ImperiumSoft. All rights reserved.\r\n\n\0`
@@ -56,12 +56,12 @@ section .data:
   msg_help_2: db ` help - Shows all functions.\r\n about - Shows information about the project.\r\n clear - Clears the screen.\r\n echo - Echoes what you say.\r\n credits - Shows the credits.\r\n user - Sets your username for this session.\r\n\n\0`
   msg_credits_1: db `-- Credits --\r\n\0`
   msg_credits_2: db ` xrc2 - Owner.\r\n ekeleze - Developer.\r\n\n\0`
-  msg_notimplemented: db `This command is not implemented, sorry!\r\n\0`
+  msg_not_implemented: db `This command is not implemented, sorry!\r\n\0`
 
   input_buffer: times 0x4D db 0
   user_buffer: times 0x4D db 0
 
-section .text:
+section .text
   _start:
     ; clear the registers
     mov ax, 0
@@ -81,7 +81,7 @@ section .text:
     mov bl, 0x02
     call print_string
     log msg_version
-    log msg_helptostart
+    log msg_help_to_start
 
     jmp _loop ; go to main loop
 
@@ -169,7 +169,7 @@ section .text:
       jmp _loop
 
     .user:
-      cwrite msg_notimplemented, $0C
+      cwrite msg_not_implemented, $0C
       ;log input_buffer + 5
       ;write nl
       ;mov si, user_buffer
