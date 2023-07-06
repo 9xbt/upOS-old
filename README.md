@@ -4,7 +4,7 @@ A simple kernel made in assembly.
 
 ![image](https://www.ekeleze.net/assets/external/iDOS.png)
 
-## Building it
+## Building on Linux
 Prerequisites:
 - make
 - nasm
@@ -32,3 +32,18 @@ clean:
 ```
 
 Then to build and run, simply run `make all` in the terminal.
+
+## Building on windows
+Prerequisites:
+- nasm
+- qemu
+- cdrtools
+
+Make a .bat file to compile and run, it should look something like this:
+```
+nasm -f bin -o kernel.bin src/kernel.asm
+move -Y kernel.asm bin
+mkisofs -b kernel.bin -no-emul-boot -o kernel.iso bin/
+qemu-system-i386 -cdrom kernel.iso
+```
+Then run the .bat file.
