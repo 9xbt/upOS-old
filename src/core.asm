@@ -38,7 +38,7 @@ section .data
   err_unknown: db `Unknown command.\r\n\0`
   err_missingargument: db `Not enough arguments.\r\n\0`
   err_argumentoverflow: db `Too many arguments.\r\n\0`
-  msg_notimplemented: db `This command has not yet been implemented!\r\n\0`
+  err_notimplemented: db `This command has not yet been implemented!\r\n\0`
 
   ; fatal
   fatal_generic: db `A fatal error has occured.\r\nPlease alert the developers as soon as possible.\r\n\0`
