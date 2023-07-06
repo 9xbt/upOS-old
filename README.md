@@ -33,7 +33,7 @@ clean:
 
 Then to build and run, simply run `make all` in the terminal.
 
-## Building on windows
+## Building on Windows
 Prerequisites:
 - nasm
 - qemu
