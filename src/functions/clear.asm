@@ -8,7 +8,9 @@ section .data
 
 section .text
     func_clear:
+        mov ah, 00
         mov ax, 3
+        mov bh, 0
         int 10h
         ret
 

@@ -10,6 +10,7 @@ jmp _start
 %include "src/functions/clear.asm"
 %include "src/functions/user.asm"
 %include "src/functions/echo.asm"
+%include "src/GUI/GUImain.asm"
 
 section .data
   logo: db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
@@ -120,6 +121,12 @@ section .text
     call cmp_string
     jc .logo
 
+    mov si, input_buffer
+    mov di, cmd_gui
+    mov cl, 0x00
+    call cmp_string
+    jc .gui
+
     jmp .unknown
  
     ; Commands/functions section
@@ -127,6 +134,10 @@ section .text
     .unknown:
       cwrite err_unknown, $0C
       jmp _loop
+
+    .gui:
+        call gui_enable
+        jmp _loop
 
     .logo:
       cwrite logo, $02
