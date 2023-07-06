@@ -1,11 +1,10 @@
 #include "inttypes.h"
-#include "keyboard.c"
 
 void kernel_entry() {
-  print("Hello, world!", 0x0F);
+  print_string("Hello, world!", 0x0F);
 }
 
-void print(char* text, int color){ 
+void print_string(char* text, int color){ 
   int counter = 0;
 
   while (1) {
