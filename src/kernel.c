@@ -1,3 +1,21 @@
+#include "inttypes.h"
+#include "keyboard.c"
+
 void kernel_entry() {
-  *(char*)0xB8000 = 'E';
+  print("Hello, world!", 0x0F);
+}
+
+void print(char* text, int color){ 
+  int counter = 0;
+
+  while (1) {
+    if (*(text + counter) == '\0') {
+      break;
+    }
+    
+    *((char*)0xB8000 + (counter * 2 + 1)) = color;
+    *((char*)0xB8000 + (counter * 2)) = *(text + counter);
+
+    counter++;
+  }
 }

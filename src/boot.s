@@ -38,7 +38,6 @@ _start:
 	call kernel_entry
 	cli
 
-
 hltLoop:
 	hlt
 	jmp hltLoop
