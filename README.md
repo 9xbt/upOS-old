@@ -39,9 +39,8 @@ Prerequisites:
 - qemu
 - cdrtools
 
-Most of these can be found with a Google search.
-
-Note: I had to add all of them to the path before I could get it to work, most of them don't do by default.
+Most of these can be found with a Google search.<br>
+(Note: I had to add all of them to the path before I could get it to work, most of them don't do by default.)
 
 Make a .bat file to compile and run, it should look something like this:
 ```
