@@ -31,4 +31,4 @@ clean:
 	rm -rvf kernel.iso
 ```
 
-Then to build and run, simply run `make all` in the terminal or `make build` to build.
+Then to build and run, simply run `make all` in the terminal.q
