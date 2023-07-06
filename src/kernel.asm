@@ -19,6 +19,8 @@ section .data
   prompt: db `$ \0`
   user_prompt: db ` $ \0`
 
+  cmd_logo: db `logo\0`
+
   input_buffer: times 0x4D db 0
   user_buffer: times 0x4D db 0
 
@@ -112,12 +114,22 @@ section .text
     call cmp_string
     jc .user
 
+    mov si, input_buffer
+    mov di, cmd_logo
+    mov cl, 0x00
+    call cmp_string
+    jc .logo
+
     jmp .unknown
  
     ; Commands/functions section
 
     .unknown:
       cwrite err_unknown, $0C
+      jmp _loop
+
+    .logo:
+      cwrite logo, $02
       jmp _loop
 
     .help:
