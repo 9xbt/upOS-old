@@ -45,7 +45,7 @@ Most of these can be found with a Google search.<br>
 Make a .bat file to compile and run, it should look something like this:
 ```
 nasm -f bin -o kernel.bin src/kernel.asm
-move -Y kernel.asm bin
+move /Y kernel.asm bin
 mkisofs -b kernel.bin -no-emul-boot -o kernel.iso bin/
 qemu-system-i386 -cdrom kernel.iso
 ```
