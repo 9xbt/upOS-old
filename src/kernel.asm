@@ -8,6 +8,8 @@ jmp _start
 %include "src/functions/credits.asm"
 %include "src/functions/about.asm"
 %include "src/functions/clear.asm"
+%include "src/functions/user.asm"
+%include "src/functions/echo.asm"
 
 section .data
   startup_logo: db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
@@ -17,15 +19,6 @@ section .data
 
   prompt: db `$ \0`
   user_prompt: db ` $ \0`
-
-  cmd_echo: db "echo"
-  cmd_user: db "user"
-
-  err_unknown: db `Unknown command.\r\n\0`
-  err_missingargument: db `Not enough arguments.\r\n\0`
-  err_argumentoverflow: db `Too many arguments.\r\n\0`
-
-  msg_notimplemented: db `This command is not implemented, sorry!\r\n\0`
 
   input_buffer: times 0x4D db 0
   user_buffer: times 0x4D db 0
@@ -123,7 +116,7 @@ section .text
 
     jmp .unknown
  
-    ; Commands section
+    ; Commands/functions section
 
     .unknown:
       cwrite err_unknown, $0C
@@ -146,14 +139,11 @@ section .text
       jmp _loop
 
     .echo:
-      log input_buffer + 5
-      write nl
+      call func_echo
       jmp _loop
 
     .user:
-      mov si, input_buffer + 5
-      mov di, user_buffer
-      call str_copy
+      call func_user
       jmp _loop
 
     ;https://www.reddit.com/r/asm/comments/jd2osj/how_could_i_implement_a_delay_in_asm/
