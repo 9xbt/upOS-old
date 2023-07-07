@@ -19,7 +19,7 @@ Before you build it, you should set up a Makefile.<br>
 It should look something like this if you are on linux: 
 ```
 all: build
-	qemu-system-i386 -cdrom kernel.iso
+	qemu-system-x86_64 -cdrom kernel.iso
 
 build:
 	nasm -f bin -o kernel.bin src/kernel.asm
@@ -47,6 +47,6 @@ Make a .bat file to compile and run, it should look something like this:
 nasm -f bin -o kernel.bin src/kernel.asm
 move /Y kernel.bin bin
 mkisofs -b kernel.bin -no-emul-boot -o kernel.iso bin/
-qemu-system-i386 -cdrom kernel.iso
+qemu-system-x86_64 -cdrom kernel.iso
 ```
 Then run the .bat file.
