@@ -1,4 +1,4 @@
-%include "src/GUIcore.asm"
+%include "src/GUI/GUIcore.asm"
 %include "src/functions/clear.asm"
 
 section .data
