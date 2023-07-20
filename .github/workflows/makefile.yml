@@ -19,7 +19,7 @@ jobs:
         sudo apt update
         sudo apt install -y make nasm mkisofs
     
-    - name: Create a makefile
+    - name: Create Makefile
       run: |
         cat <<EOF > Makefile
         all: build
@@ -34,8 +34,8 @@ jobs:
           rm -rvf kernel.iso
         EOF
     
-    - name: Build
+    - name: Build project
       run: make build
 
-    - name: Clean
+    - name: Clean project
       run: make clean
