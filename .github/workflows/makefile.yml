@@ -35,7 +35,12 @@ jobs:
         EOF
     
     - name: Build project
-      run: make build
+      run: |
+        nasm -f bin -o kernel.bin src/kernel.asm
+        mv kernel.bin bin/kernel.bin
+        mkisofs -b kernel.bin -no-emul-boot -o kernel.iso bin/
 
     - name: Clean project
-      run: make clean
+      run: |
+        rm -rvf kernel.bin
+        rm -rvf kernel.iso
