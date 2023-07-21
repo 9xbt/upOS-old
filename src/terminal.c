@@ -3,45 +3,44 @@
 
 #include "inttypes.h"
 #include "ports/io_ports.c"
+#include "stdbool.h"
 
 #define VGA_WIDTH 80
 
-int CURSOR_X, CURSOR_Y;
+int CursorX, CursorY;
 
 void print_string(char* text, int color) {
-  int counter = 0;
+  while (true) {
+    int start = CursorY * VGA_WIDTH + CursorX;
 
-  while (1) {
-    int start = (CURSOR_Y * VGA_WIDTH + CURSOR_X);
-
-    if (*(text + counter) == '\0') {
+    if (*(text) == '\0') {
       break;
     }
 
-     if (*(text + counter) == '\n') {
-      CURSOR_X = 0;
-      CURSOR_Y ++;
+    if (*(text) == '\n') {
+        CursorX = 0;
+        CursorY++;
     }
-    
-    else {
-      print_char(*(text + start), color);
 
-      CURSOR_X++;
-      if (CURSOR_X == VGA_WIDTH) {
-        CURSOR_X = 0;
-        CURSOR_Y++;
+    else {
+      print_char(*(text), color);
+
+      CursorX++;
+      if (CursorX == VGA_WIDTH) {
+        CursorX = 0;
+        CursorY++;
       }
     }
 
-    counter++;
+    text++;
   }
 
-  set_cursor_pos(CURSOR_X, CURSOR_Y);
+  set_cursor_pos(CursorX, CursorY);
 }
 
 void print_char(char c, int color) {
-  *((char*)0xB8000 + ((CURSOR_Y * VGA_WIDTH + CURSOR_X) * 2 + 1)) = color;
-  *((char*)0xB8000 + ((CURSOR_Y * VGA_WIDTH + CURSOR_X) * 2))     = c;
+  *((char*)0xB8000 + ((CursorY * VGA_WIDTH + CursorX) * 2 + 1)) = color;
+  *((char*)0xB8000 + ((CursorY * VGA_WIDTH + CursorX) * 2))     = c;
 }
 
 void set_cursor_pos(uint8_t x, uint8_t y) {
@@ -51,6 +50,8 @@ void set_cursor_pos(uint8_t x, uint8_t y) {
     outportb(0x3D5, cursorLocation >> 8);
     outportb(0x3D4, 15);
     outportb(0x3D5, cursorLocation);
+    CursorX = x;
+    CursorY = y;
 }
 
 #endif

@@ -2,8 +2,7 @@
 #include "ports/io_ports.h"
 
 void kernel_entry() {
-  print_string("Hello, world!", 0x0F);
-  print_string("test", 0x0F);
+    print_string("Hello, world!\n", 0x0F);
 }
 
 /*#define KEYBOARD_PORT 0x60
@@ -122,7 +121,7 @@ void test_input()
   do{
     keycode = get_input_keycode();
     ch = get_ascii_char(keycode);
-    print_char(ch);
+    print_char(ch, 0x0F);
     sleep(0x02FFFFFF);
   }while(ch > 0);
 }
