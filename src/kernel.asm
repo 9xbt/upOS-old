@@ -11,6 +11,7 @@ jmp _start
 %include "src/functions/user.asm"
 %include "src/functions/echo.asm"
 %include "src/GUI/GUImain.asm"
+%include "src/TUI/TESTTUI.asm"
 
 section .data
   logo: db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
@@ -74,6 +75,12 @@ section .text
     je _loop
 
     mov si, input_buffer
+    mov di, cmd_tui_test
+    mov cl, 0x00
+    call cmp_string
+    jc .tui_test
+
+    mov si, input_buffer
     mov di, cmd_help
     mov cl, 0x00
     call cmp_string
@@ -130,6 +137,10 @@ section .text
     jmp .unknown
  
     ; Commands/functions section
+
+    .tui_test:
+        call tui_run
+        jmp _loop
 
     .unknown:
       cwrite err_unknown, $0C
