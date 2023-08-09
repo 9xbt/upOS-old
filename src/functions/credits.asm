@@ -13,6 +13,9 @@ section .data
     ; winksplorer section
     msg_wink: db `          _       _    \r\n__      _(_)_ __ | | __ Role: iDOS Contributor\r\n\\ \\ /\\ / / | '_ \\| |/ / Other projects: snbox, yadyn, library, DOS#BASH, fetchOS \\ V  V /| | | | |   <  About: A coder who codes code that was coded by a coder.  \\_/\\_/ |_|_| |_|_|\\_\\ Links: www.winksplorer.net\r\n\0`
 
+    ; ethereal section
+    msg_ethereal: db `EtherealTheDev was here\r\n\0`
+
     cmd_credits: db `credits\0`
 
 section .text
@@ -25,7 +28,8 @@ section .text
         cwrite msg_ekeleze, $0C
         write nl
         cwrite msg_wink, $09
-
+        write nl
+        cwrite msg_ethereal, $05
         mov cl, 0
 
         .loop:
