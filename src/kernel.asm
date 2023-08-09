@@ -10,6 +10,8 @@ jmp _start
 %include "src/functions/clear.asm"
 %include "src/functions/user.asm"
 %include "src/functions/echo.asm"
+%include "src/functions/shutdown.asm"
+%include "src/functions/reboot.asm"
 %include "src/GUI/GUImain.asm"
 %include "src/TUI/TESTTUI.asm"
 
@@ -134,6 +136,18 @@ section .text
     call cmp_string
     jc .gui
 
+    mov si, input_buffer
+    mov di, cmd_shutdown
+    mov cl, 0x00
+    call cmp_string
+    jc .shutdown
+
+    mov si, input_buffer
+    mov di, cmd_reboot
+    mov cl, 0x00
+    call cmp_string
+    jc .reboot
+
     jmp .unknown
  
     ; Commands/functions section
@@ -176,6 +190,14 @@ section .text
 
     .user:
       call func_user
+      jmp _loop
+
+    .shutdown:
+      call func_shutdown
+      jmp _loop
+
+    .reboot:
+      call func_reboot
       jmp _loop
 
     ;https://www.reddit.com/r/asm/comments/jd2osj/how_could_i_implement_a_delay_in_asm/
