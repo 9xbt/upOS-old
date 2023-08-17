@@ -1,4 +1,4 @@
-# iDOS
+# upOS
 
 [![build](https://github.com/9xbt/iDOS/actions/workflows/makefile.yml/badge.svg)](https://github.com/9xbt/iDOS/actions/workflows/makefile.yml)
 
