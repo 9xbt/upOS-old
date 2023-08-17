@@ -2,7 +2,7 @@
 %define CORE_ASM
 
 %macro write 1
-mov bl, 0x07
+mov bl, 0x0F
 mov si, %1
 call print_string
 %endmacro

@@ -16,8 +16,8 @@ jmp _start
 %include "src/TUI/TESTTUI.asm"
 
 section .data
-  logo: db ` __  _______    ______    ______  \r\n|  \\|       \\  /      \\  /      \\ \r\n \\$$| $$$$$$$\\|  $$$$$$\\|  $$$$$$\\\r\n|  \\| $$  | $$| $$  | $$| $$___\\$$\r\n| $$| $$  | $$| $$  | $$ \\$$    \\ \r\n| $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n| $$| $$    $$ \\$$    $$ \\$$    $$\r\n \\$$ \\$$$$$$$   \\$$$$$$   \\$$$$$$ \r\n\n\0`
-  msg_version: db `Beta 1.2-dev\r\nCopyright (c) 2023 ImperiumSoft. All rights reserved.\r\n\0`
+  logo: db `                      ______    ______  \r\n                     /      \\  /      \\ \r\n __    __   ______  |  $$$$$$\\|  $$$$$$\\\r\n|  \\  |  \\ /      \\ | $$  | $$| $$___\\$$\r\n| $$  | $$|  $$$$$$\\| $$  | $$ \\$$    \\ \r\n| $$  | $$| $$  | $$| $$  | $$ _\\$$$$$$\\\r\n| $$__/ $$| $$__/ $$| $$__/ $$|  \\__| $$\r\n \\$$    $$| $$    $$ \\$$    $$ \\$$    $$\r\n  \\$$$$$$ | $$$$$$$   \\$$$$$$   \\$$$$$$ \r\n          | $$                          \r\n          | $$                          \r\n           \\$$                          \r\n\n\0`
+  msg_version: db `Beta 1.2-dev\r\nCopyright (c) 2023 Mobren. All rights reserved.\r\n\0`
   msg_helptostart: db `Type help and press enter to get started.\r\n\n\0`
 
   prompt: db `$ \0`
@@ -153,8 +153,8 @@ section .text
     ; Commands/functions section
 
     .tui_test:
-        call tui_run
-        jmp _loop
+      call tui_run
+      jmp _loop
 
     .unknown:
       cwrite err_unknown, $0C
@@ -216,6 +216,10 @@ section .text
    
         cmp cl, 0x4D ; 77
         je .loop
+
+        mov bl, 0x0F
+        mov cx, 1
+        call set_color
 
         mov ah, $0e
         int 0x10
