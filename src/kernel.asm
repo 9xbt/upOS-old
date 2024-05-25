@@ -203,65 +203,58 @@ section .text
     ;https://www.reddit.com/r/asm/comments/jd2osj/how_could_i_implement_a_delay_in_asm/
 
   get_string:
-    xor cl, cl
-      .loop:
-        mov ah, 0
-        int $16
-  
-        cmp al, $08
-        je .backspace
+  xor cl, cl
+    .loop:
+      mov ah, 0
+      int 0x16
+
+      cmp al, 0x08
+      je .backspace
    
-        cmp al, 0x0D
-        je .done
+      cmp al, 0x0D
+      je .done
    
-        cmp cl, 0x4D ; 77
-        je .loop
+      cmp cl, 0xFF ; amount of characters to take
+      je .loop
+   
+      mov ah, 0x0e
+      int 0x10
 
-        mov bl, 0x0F
-        mov cx, 1
-        call set_color
+      stosb
+      inc cl
+      jmp .loop
 
-        mov ah, $0e
-        int 0x10
+    .backspace:
+      cmp cl, 0
+      je .loop
 
-        stosb
-        inc cl
-        jmp .loop
-
-      .backspace:
-        cmp cl, 0
-        je .loop
-
-        dec di
-        mov byte [di], 0
-        dec cl
+      dec di
+      mov byte [di], 0
+      dec cl
     
-        ; move the cursor back 1 position
-        mov ah, $0e
-        mov al, $08
-        int $10
+      mov ah, 0x0e
+      mov al, 0x08
+      int 0x10
 
-        ; remove the character at the current position
-        mov al, ' '
-        int $10
+      mov al, ' '
+      int 0x10
 
-        ; move the cursor back 1 position
-        mov al, $08
-        int $10
+      mov al, 0x08
+      int 0x10
 
-        jmp .loop
+      jmp .loop
 
-      .done:
-        mov al,0
-        stosb
+    .done:
+      mov al,0
+      stosb
       
-        mov ah, $0e
-        mov al, 0x0D
-        int $10
-        mov al, 0x0A
-        int $10
+      mov ah, 0x0e
+      mov al, 0x0d
+      int 0x10
+      mov al, 0x0a
+      int 0x10
 
-        ret
+      ret
 
   cmp_string:
     ; usage:
